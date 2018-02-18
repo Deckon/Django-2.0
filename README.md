@@ -8,6 +8,7 @@
     * [Instalación de Pipenv](#instalación-de-pipenv)
     * [Uso de Pipenv](#uso-de-pipenv)
 * [Creación de un proyecto con Django](#creación-de-un-proyecto-con-django)
+* [Hello World!](#hello-world)
 
 ## Introducción
 Esta es una pequeña guia para la creación de proyectos con la ultima version de Django 2.0.X y las herramientos recomendadas para su gestion. Esta guia toma como referencia la excelente documentación creada por el profesor **[Will Vincent](https://wsvincent.com/)** en su pagina [https://djangoforbeginners.com/](https://djangoforbeginners.com/)
@@ -124,3 +125,40 @@ $ pipenv shell
 
 (django-JmZ1NTQw) $
 ~~~
+
+Crear el proyecto con **Django**
+~~~sh
+(django-JmZ1NTQw) $ django-admin.py startproject nuevo
+~~~
+
+Ejecutar el servidor de **Django** para comprobar que todo se instala y funciona correctamente
+~~~sh
+# Moverse dentro de la carpeta del proyecto
+(django-JmZ1NTQw) $ cd nuevo
+
+# Ejecutar el servidor
+(django-JmZ1NTQw) $ ./manage.py runserver
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 14 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+
+February 18, 2018 - 01:38:44
+Django version 2.0.2, using settings 'nuevo.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+~~~
+
+Al ingresar la direccion **http://127.0.0.1:8000/** se deberia visualizar algo como lo siguiente
+
+![Localhost](imagenes/localhost.png)
+
+Para finalizar el servidor se precionan las teclas <kbd>Ctrl</kbd> + <kbd>C</kbd> y para salir del entorno
+~~~sh
+(django-JmZ1NTQw) $ exit
+$
+~~~
+
+## Hello World!
