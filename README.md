@@ -17,13 +17,13 @@ Esta es una pequeña guia para la creación de proyectos con la ultima version d
 ## Requerimientos previos
 Para poder ejecutar **Django** en nuestro equipo es necesario tener instaladas unas cuantas utilerias y paquetes.
 
-* **Python 3:** La ultima version del lenguaje de programacion sobre el cual trabaja Django 2.0.X.
-* **Pip:** Gestor de paquetes Python.
+* **Python 3:** La ultima version del lenguaje de programación sobre el cual trabaja Django 2.0.X.
+* **Pip:** Gestor de paquetes de Python.
 
 ## Pipenv
-Anteriormente al desarrollar con **Python** era necesario usar las dos principales herramientas de este lenguaje: **Pip** como gestor de paquetes y **virtualenv*** como gestor de entornos virtuales, estas eran las herramientas recomendadas por **Python**. Actualemente estas dos herramientas han sido desplasadas por **Pipenv** el cual combina las funcionalidades de ambas.
+Anteriormente al desarrollar con **Python** era necesario usar las dos principales herramientas de este lenguaje: **Pip** como gestor de paquetes y **virtualenv** como gestor de entornos virtuales, estas eran las herramientas recomendadas por **Python**. Actualemente estas dos herramientas han sido desplazadas por **Pipenv** el cual combina las funcionalidades de ambas.
 
-Por un lado **Pipenv** crea un entorno virtual donde instala,desinstala y actualiza paquetes de manera aislada del sistema u otros entornos virtuales, ademas de crear un par de archivos los cuales gestionan las dependencias de nuestra aplicación permitiendonos transladar estos archivos a otro entorno y reinstalar las dependencias adecuadas para el funcionamiento de la aplicación. 
+Por un lado **Pipenv** crea un entorno virtual donde instala, desinstala y actualiza paquetes de manera aislada del sistema u otros entornos virtuales, ademas de crear un par de archivos los cuales gestionan las dependencias de nuestra aplicación permitiendonos transladar estos archivos a otro entorno y reinstalar las dependencias adecuadas para el funcionamiento de la aplicación. 
 
 ### Instalación de Pipenv
 La forma mas sencilla de instalar **Pipenv** es mediane **Pip**
@@ -53,16 +53,16 @@ pipenv, version 9.0.3
 ~~~
 
 ### Uso de Pipenv
-Instalación de una biblioteca y creación de su entorno vitual usando **Python 3**
+Instalación de una biblioteca y creación de su entorno virtual usando **Python 3**
 ~~~sh
 # Creación de la carpeta donde se alojara el entorno y los documentos de dependencias
 $ mkdir Entorno
 
-# Creacion del venv e instalación de la biblioteca
+# Creacion del entorno virtual e instalación del paquete
 $ pipenv --three install django
 ~~~
 Esto crea un archivo **Pipfile** y **Pipfile.lock** los cuales gestionan las dependencias del entorno virtual. 
-Los entornos virtuales se alojan en **/home/usuario/.local/share/virtualenvs** el cau lta,mbien genera un enlace sinbolico en **/home/usuario/.virtualenv**.
+Los entornos virtuales se alojan en **/home/usuario/.local/share/virtualenvs** el cual tambien genera un enlace sinbolico en **/home/usuario/.virtualenv**.
 
 ---
 
@@ -131,7 +131,7 @@ Crear el proyecto con **Django**
 (django-JmZ1NTQw) $ django-admin.py startproject nuevo
 ~~~
 
-Ejecutar el servidor de **Django** para comprobar que todo se instala y funciona correctamente
+Ejecutar el servidor de **Django** para comprobar que todo se instalo y funciona correctamente
 ~~~sh
 # Moverse dentro de la carpeta del proyecto
 (django-JmZ1NTQw) $ cd nuevo
@@ -151,7 +151,7 @@ Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ~~~
 
-Al ingresar la direccion **http://127.0.0.1:8000/** se deberia visualizar algo como lo siguiente
+Al ingresar la dirección **http://127.0.0.1:8000/** se deberia visualizar algo como lo siguiente
 
 ![Localhost](imagenes/localhost.png)
 
