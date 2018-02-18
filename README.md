@@ -11,11 +11,11 @@
 * [Hello World!](#hello-world)
 
 ## Introducción
-Esta es una pequeña guia para la creación de proyectos con la ultima version de Django 2.0.X y las herramientos recomendadas para su gestion. Esta guia toma como referencia la excelente documentación creada por el profesor **[Will Vincent](https://wsvincent.com/)** en su pagina [https://djangoforbeginners.com/](https://djangoforbeginners.com/)
+Esta es una pequeña guia para la creación de proyectos con la ultima version de Django 2.0.X y las herramientas recomendadas para su gestion. Esta guia toma como referencia la excelente documentación creada por el profesor **[Will Vincent](https://wsvincent.com/)** en su pagina [https://djangoforbeginners.com/](https://djangoforbeginners.com/)
 
 
 ## Requerimientos previos
-Para poder ejecutar **Django** en nuestro equipo es necesario tener instaladas unas cuantas utilerias y paquetes.
+Para poder ejecutar **Django** en nuestro equipo es necesario tener instalado lo siguiente:
 
 * **Python 3:** La ultima version del lenguaje de programación sobre el cual trabaja Django 2.0.X.
 * **Pip:** Gestor de paquetes de Python.
@@ -53,7 +53,7 @@ pipenv, version 9.0.3
 ~~~
 
 ### Uso de Pipenv
-Instalación de una biblioteca y creación de su entorno virtual usando **Python 3**
+**Instalación** de una biblioteca y creación de su entorno virtual usando **Python 3**
 ~~~sh
 # Creación de la carpeta donde se alojara el entorno y los documentos de dependencias
 $ mkdir Entorno
@@ -64,46 +64,43 @@ $ pipenv --three install django
 Esto crea un archivo **Pipfile** y **Pipfile.lock** los cuales gestionan las dependencias del entorno virtual. 
 Los entornos virtuales se alojan en **/home/usuario/.local/share/virtualenvs** el cual tambien genera un enlace sinbolico en **/home/usuario/.virtualenv**.
 
----
+Instalación de una **version específica** de un paquete
+~~~sh
+# Instala especificamente la versión 1.10.1 de Django
+$ pipenv --three install 'django==1.10.1'
+ó
+# Instala una version de Django mayor a la 1.10 pero menor a la 1.11
+$ pipenv --three install 'django>1.10,<1.11'
+~~~
 
-Activación del entorno virtual
+**Activación** del entorno virtual
 ~~~sh
 $ pipenv shell
 (django-JmZ1NTQw) $
 ~~~
 
----
-
-Actualizar paquetes del entorno virtual
+**Actualizar** paquetes del entorno virtual
 ~~~sh
 (django-JmZ1NTQw) $ pipenv --update
 ~~~
 
----
-
-Ver las dependencias del entorno virtual
+Ver las **dependencias** del entorno virtual
 ~~~sh
 (django-JmZ1NTQw) $ pipenv graph
 ~~~
 
----
-
-Salir del entorno virtual
+**Salir** del entorno virtual
 ~~~sh
 (django-JmZ1NTQw) $ exit
 $
 ~~~
 
----
-
-Desinstalar un entorno virtual
+**Desinstalar** un entorno virtual
 ~~~sh
 $ pipenv --rm
 ~~~
 
----
-
-Instalar las dependencias de un entorno virtual a partir de los archivos **Pipfile** y **Pipfile.lock**
+**Instalar las dependencias** de un entorno virtual a partir de los archivos **Pipfile** y **Pipfile.lock**
 ~~~sh
 $ pipenv install
 ~~~
@@ -151,7 +148,7 @@ Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ~~~
 
-Al ingresar la dirección **http://127.0.0.1:8000/** se deberia visualizar algo como lo siguiente
+Al ingresar la dirección **http://127.0.0.1:8000/** se deberia visualizar algo como lo siguiente:
 
 ![Localhost](imagenes/localhost.png)
 
@@ -162,3 +159,84 @@ $
 ~~~
 
 ## Hello World!
+~~~sh
+# Creación de la carpeta raiz 
+$ mkdir helloworld
+
+# Cambiar a la carpeta raiz
+$ cd helloworld
+
+# Crear entorno virtual e instalación de Django
+$ pipenv --three install django
+
+# Activación del entorno virtual
+$ pipenv shell
+
+# Entorno activado
+(helloworld-415ivvZC) $
+
+# Iniciar el proyecto
+(helloworld-415ivvZC) $ django-admin startproject helloworld_project
+
+# Ejecutar el servidor para comprobar que Django se ejecuta correctamente
+(helloworld-415ivvZC) $ ./manage.py runserver
+
+# Crear una aplicación
+(helloworld-415ivvZC) $ ./manage.py startapp pages
+~~~
+
+Se añade la aplicación al archivo **settings.py**
+~~~python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'pages.apps.PagesConfig',   <- Aplicación añadida pages/apps.py/PagesConfig()
+]
+~~~
+
+Se crea la vista en el archivo **pages/views.py**
+~~~python
+from django.shortcuts import render
+
+# Create your views here.
+from django.http import HttpResponse
+
+
+def homePageView(request):
+    return HttpResponse('Hola Mundo!')
+~~~
+
+Se crear el archivo **pages/urls.py** y se agrega la vista
+~~~python
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.homePageView, name='home')
+]
+~~~
+
+Se edita el archivo url principal **helloworld_project/urls.py**
+~~~python
+from django.contrib import admin
+from django.urls import path, include # Se añade el include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('pages.urls')), # Se añade la ruta a pages/urls.py
+]
+~~~
+
+Se ejecuta nuevamente el servidor para provar la aplicación
+~~~python
+(helloworld-415ivvZC) $ ./manage.py runserver
+~~~
+
+Al ingresar la dirección **http://127.0.0.1:8000/** se deberia visualizar algo como lo siguiente:
+
+![Hola](imagenes/hola.png)
