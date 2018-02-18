@@ -9,6 +9,9 @@
     * [Uso de Pipenv](#uso-de-pipenv)
 * [Creación de un proyecto con Django](#creación-de-un-proyecto-con-django)
 * [Hello World!](#hello-world)
+* [App con templates](#app-con-templates)
+    * [Templates](#templates)
+    * [Extendiendo el Template](#extendiendo-el-template)
 
 ## Introducción
 Esta es una pequeña guia para la creación de proyectos con la ultima version de Django 2.0.X y las herramientas recomendadas para su gestion. Esta guia toma como referencia la excelente documentación creada por el profesor **[Will Vincent](https://wsvincent.com/)** en su pagina [https://djangoforbeginners.com/](https://djangoforbeginners.com/)
@@ -125,7 +128,7 @@ $ pipenv shell
 
 Crear el proyecto con **Django**
 ~~~sh
-(django-JmZ1NTQw) $ django-admin.py startproject nuevo
+(django-JmZ1NTQw) $ django-admin.py startproject nuevo .
 ~~~
 
 Ejecutar el servidor de **Django** para comprobar que todo se instalo y funciona correctamente
@@ -176,7 +179,7 @@ $ pipenv shell
 (helloworld-415ivvZC) $
 
 # Iniciar el proyecto
-(helloworld-415ivvZC) $ django-admin startproject helloworld_project
+(helloworld-415ivvZC) $ django-admin startproject helloworld_project .
 
 # Ejecutar el servidor para comprobar que Django se ejecuta correctamente
 (helloworld-415ivvZC) $ ./manage.py runserver
@@ -221,7 +224,7 @@ urlpatterns = [
 ]
 ~~~
 
-Se edita el archivo url principal **helloworld_project/urls.py**
+Se edita el archivo urls principal **helloworld_project/urls.py**
 ~~~python
 from django.contrib import admin
 from django.urls import path, include # Se añade el include
@@ -240,3 +243,222 @@ Se ejecuta nuevamente el servidor para probar la aplicación
 Al ingresar la dirección **http://127.0.0.1:8000/** se deberia visualizar algo como lo siguiente:
 
 ![Hola](imagenes/hola.png)
+
+## App con templates
+~~~sh
+$ mkdir simple
+
+$ cd simple
+
+$ pipenv --three install django
+
+$ pipenv shell
+
+(simple-BrSeYfS6) $
+
+(simple-BrSeYfS6) $ django-admin startproject simple_project .
+
+(simple-BrSeYfS6) $ ./manage.py startapp pages
+~~~
+
+**settings.py**
+~~~python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'pages.apps.PagesConfig',
+]
+~~~
+
+Comprobamos que todo funciona
+~~~sh
+(simple-BrSeYfS6) $ ./manage.py runserver
+~~~
+
+### Templates
+
+~~~sh
+(simple-BrSeYfS6) $ mkdir templates
+(simple-BrSeYfS6) $ touch templates/home.html
+~~~
+
+Esto deja una estrucutura del proyecto como la siguiente:
+~~~sh
+.
+├── db.sqlite3
+├── manage.py
+├── pages
+│   ├── admin.py
+│   ├── apps.py
+│   ├── __init__.py
+│   ├── migrations
+│   ├── models.py
+│   ├── tests.py
+│   └── views.py
+├── Pipfile
+├── Pipfile.lock
+├── simple_project
+│   ├── __init__.py
+│   ├── __pycache__
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+└── templates       <-- Directorio templates
+    └── home.html
+~~~
+
+Añadir el **template** en **settings.py**
+~~~python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  <- Añadiendo la carpeta templates al proyecto
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+~~~
+
+Se añade algo de texto al **template** creado **templates/home.html**
+~~~html
+<h1>Homepage.</h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur ducimus dolorum, recusandae enim, quidem facere?</p>
+~~~
+
+En versiones anteriores de **Django** se usaban las **vistas** creadas mediante **funciones** , para cumplir la filosofia DRY (Don't Repeat Yourself) se introdujo las **Class-Based Views**, vistas creadas con **clases**
+
+Se crea la **vista** en **pages/views.py**
+~~~python
+from django.views.generic import TemplateView
+
+class HomePageView(TemplateView):
+    template_name = 'home.html'
+~~~
+
+Se crea la **url** para la vista creando el archivo **pages/urls.py**
+
+~~~sh
+(simple-BrSeYfS6) $ touch pages/urls.py
+~~~
+
+**pages/urls.py**
+~~~python
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.HomePageView.as_view(), name='home'),
+]
+~~~
+
+Se añade la **url** del archvio **pages/urls.py** en **simple_project/urls.py**
+~~~python
+from django.contrib import admin
+from django.urls import path, include # Se añade el include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('pages.urls')), # URL de pages/url.py
+]
+~~~
+
+Se prueba que la vista este funcionando correctamente
+~~~sh
+(simple-BrSeYfS6) $ ./manage.py runserver
+~~~
+
+Al ingresar la dirección **http://127.0.0.1:8000/** se deberia visualizar algo como lo siguiente:
+
+![Template](imagenes/template.png)
+
+Se añade una pagina About siguiendo los pasos anteriores
+~~~sh
+(simple-BrSeYfS6) $ touch templates/about.html
+~~~
+
+Se añade texto al **about.html**
+~~~html
+<h1>About page.</h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur ducimus dolorum, recusandae enim, quidem facere?</p>
+~~~
+
+Se añade la vista en **pages/views.py**
+~~~python
+from django.views.generic import TemplateView
+
+# Vista de Home
+class HomePageView(TemplateView):
+    template_name = 'home.html'
+
+# Vista de About
+class AboutPageView(TemplateView):
+    template_name = 'about.html'
+~~~
+
+Se añade la **URL** del about en **pages/urls.py**
+~~~python
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.HomePageView.as_view(), name='home'),
+    path('about/', views.AboutPageView.as_view(), name='about'), # Se añade la URL del about
+]
+~~~
+
+### Extendiendo el Template
+Se crea un archivo **base.html**
+~~~sh
+(simple-BrSeYfS6) $ touch templates/base.html
+~~~
+
+Se le añade contenido a **templates/base.html**
+~~~html
+<!-- pages/base.html -->
+<header>
+  <a href="{% url 'home' %}">Home</a> | <a href="{% url 'about' %}">About</a>
+</header>
+
+{% block content %}
+{% endblock content%}
+~~~
+
+Se extiende el contenido de **base.html** en **home.html** y en **about.html**
+**templates/home.html**
+~~~html
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Homepage.</h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur ducimus dolorum, recusandae enim, quidem facere?</p>
+{% endblock content %}
+~~~
+
+**templates/about.html**
+~~~html
+<!-- templates/about.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>About page.</h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur ducimus dolorum, recusandae enim, quidem facere?</p>
+{% endblock content %}
+~~~
+
+Generando un resultado parecido a esto:
+
+![Extend](imagenes/extend.png)
