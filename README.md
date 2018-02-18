@@ -232,8 +232,8 @@ urlpatterns = [
 ]
 ~~~
 
-Se ejecuta nuevamente el servidor para provar la aplicación
-~~~python
+Se ejecuta nuevamente el servidor para probar la aplicación
+~~~sh
 (helloworld-415ivvZC) $ ./manage.py runserver
 ~~~
 
