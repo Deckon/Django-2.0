@@ -12,6 +12,10 @@
 * [App con templates](#app-con-templates)
     * [Templates](#templates)
     * [Extendiendo el Template](#extendiendo-el-template)
+* [Admin y DB](#admin-y-db)
+* [Lista de proyectos](#lista-de-proyectos)
+
+[Guia anterior Django1.11](https://github.com/Deckon/Django1.11)
 
 ## Introducción
 Esta es una pequeña guia para la creación de proyectos con la ultima version de Django 2.0.X y las herramientas recomendadas para su gestion. Esta guia toma como referencia la excelente documentación creada por el profesor **[Will Vincent](https://wsvincent.com/)** en su pagina [https://djangoforbeginners.com/](https://djangoforbeginners.com/)
@@ -462,3 +466,224 @@ Se extiende el contenido de **base.html** en **home.html** y en **about.html**
 Generando un resultado parecido a esto:
 
 ![Extend](imagenes/extend.png)
+
+## Admin y DB
+En esta seccion se creara un proyecto de Django que usa Bases de Datos y la interfaz administrativa de Django.
+La Base de Datos que se usara es la BD por defecto de Django **SQLite**
+~~~sh
+$ mkdir mb
+
+$ cd mb
+
+$ pipenv --three install django
+
+$ pipenv shell
+
+(mb-oo2dIS7L) $
+
+(mb-oo2dIS7L) $ django-admin startproject mb_project .
+
+(mb-oo2dIS7L) $ ./manage.py startapp posts
+~~~
+
+**settings.py**
+~~~python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'post.apps.PostConfig',
+]
+~~~
+
+Para establecer el idioma y la zona horaria se realizan las modificaciones necesarias en el **settings.py**
+~~~python
+LANGUAGE_CODE = 'es-mx'
+
+TIME_ZONE = 'America/Mexico_City'
+~~~
+
+Se realiza la migracion de la BD
+~~~sh
+(mb-oo2dIS7L) $ ./manage.py migrate
+
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying sessions.0001_initial... OK
+~~~
+Esta operacion genera el contenido en la BD en el archivo **db.sqlite3** que se genera en el proyecto.
+
+**post/models.py**
+~~~python
+from django.db import models
+
+# Create your models here.
+class Post(models.Model):
+    text = models.TextField()   # Nombre del campo y tipo de dato
+~~~
+En este caso se indica que se cree en la BD un campo de nombre **text** de tipo **TextField**.
+
+Ya que se creo un nuevo modelo con un nuevo campo es necesario crear la migracion de datos a la BD
+~~~sh
+(mb-oo2dIS7L) $ ./manage.py makemigrations post
+
+Migrations for 'post':
+  post/migrations/0001_initial.py
+    - Create model Post
+~~~
+~~~sh
+(mb-oo2dIS7L) $ ./manage.py migrate
+
+Operations to perform:
+  Apply all migrations: post
+Running migrations:
+  Applying post.0001_initial... OK
+~~~
+
+Se crea un Super Usuario para usar el admin de Django
+~~~sh
+(mb-oo2dIS7L) $ ./manage.py createsuperuser
+
+Username (leave blank to use 'usuario'):
+Email:
+Password:
+Password (again):
+Superuser created successfully.
+~~~
+
+Se ejecuta el servidor
+~~~sh
+(mb-oo2dIS7L) $ ./manage.py runserver
+~~~
+Al ingresar a la direccion **http://127.0.0.1:8000/admin/** nos aparece la pantalla de login del administrador
+
+![Login](imagenes/login.png)
+
+Despues de ingresar el usuario y contraseña del super usuario que se creo, se muestra una pantalla como la siguiente
+
+![Admin](imagenes/admin.png)
+
+Para mostrar el campo del modelo se edita **post/admin.py**
+~~~python
+from django.contrib import admin
+from .models import Post
+
+# Register your models here.
+
+admin.site.register(Post)
+~~~
+
+y se añade una funcion a **post/models.py** para mostrar el contenido de los campos
+~~~python
+from django.db import models
+
+# Create your models here.
+class Post(models.Model):
+    text = models.TextField()   # Nombre del campo y tipo de dato
+
+    def __str__(self):  # Función añadida para que muestre correctamente los campos del modelo
+        return self.text
+~~~
+
+![Post](imagenes/post.png)
+
+**post/views.py**
+~~~python
+posts/views.py
+~~~
+
+Se crean los templates
+~~~sh
+(mb-oo2dIS7L) $ mkdir templates
+
+(mb-oo2dIS7L) $ touch templates/home.html
+~~~
+
+**settings.py**
+~~~python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+~~~
+
+**templates/home.html**
+~~~html
+<h1>Message board homepage</h1>
+<ul>
+  {% for post in object_list %}
+    <li>{{ post }}</li>
+  {% endfor %}
+</ul>
+~~~
+
+**mb_project/urls.py**
+~~~python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('posts.urls')),
+]
+~~~
+
+Se crea el archvi **post/urls.py**
+~~~sh
+(mb-oo2dIS7L) $ touch templates/urls.html
+~~~
+
+**post/urls.py**
+~~~python
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.HomePageView.as_view(), name='home'),
+]
+~~~
+
+Se ejecuta el servidor
+~~~sh
+(mb-oo2dIS7L) $ ./manage.py runserver
+~~~
+
+Al ingresar la dirección **http://127.0.0.1:8000/** se deberia visualizar algo como lo siguiente:
+
+![Vista-Post](imagenes/vista-post.png)
+
+Desde el admin se puede seguir añadiendo contenido
+
+![Vista-Admin](imagenes/vista-admin.png)
+
+## Lista de proyectos
+En esta seccion se pondran los enlaces de git de cada uno de los proyectos realizados:
