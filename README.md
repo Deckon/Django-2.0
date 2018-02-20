@@ -28,7 +28,7 @@ Para poder ejecutar **Django** en nuestro equipo es necesario tener instalado lo
 * **Pip:** Gestor de paquetes de Python.
 
 ## Pipenv
-Anteriormente al desarrollar con **Python** era necesario usar las dos principales herramientas de este lenguaje: **Pip** como gestor de paquetes y **virtualenv** como gestor de entornos virtuales, estas eran las herramientas recomendadas por **Python**. Actualemente la utileria recomendada para la gestion de netornos virtuales es **Pipenv** el cual combina las funcionalidades de ambas.
+Anteriormente al desarrollar con **Python** era necesario usar las dos principales herramientas de este lenguaje: **Pip** como gestor de paquetes y **virtualenv** como gestor de entornos virtuales, estas eran las herramientas recomendadas por **Python**. Actualemente la utileria recomendada para la gestion de entornos virtuales es **Pipenv** el cual combina las funcionalidades de ambas.
 
 Por un lado **Pipenv** crea un entorno virtual donde instala, desinstala y actualiza paquetes de manera aislada del sistema u otros entornos virtuales, ademas de crear un par de archivos los cuales gestionan las dependencias de nuestra aplicación permitiendonos transladar estos archivos a otro entorno y reinstalar las dependencias adecuadas para el funcionamiento de la aplicación. 
 
