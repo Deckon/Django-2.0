@@ -695,3 +695,5 @@ En esta seccion se pondran los enlaces de git de cada uno de los proyectos reali
 [Simple Project](https://github.com/Deckon/Entornos2.0/tree/master/02simple)
 
 [Message Board](https://github.com/Deckon/Entornos2.0/tree/master/03mb)
+
+[Blog](https://github.com/Deckon/Entornos2.0/tree/master/04blog)
